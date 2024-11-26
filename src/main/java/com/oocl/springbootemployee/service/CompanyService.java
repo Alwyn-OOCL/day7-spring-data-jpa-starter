@@ -1,5 +1,6 @@
 package com.oocl.springbootemployee.service;
 
+import com.oocl.springbootemployee.exception.CompanyNotFoundException;
 import com.oocl.springbootemployee.model.Company;
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.repository.CompanyInMemoryRepository;
@@ -38,7 +39,8 @@ public class CompanyService {
 
 
     public List<Employee> getEmployeesByCompanyId(Integer id) {
-        Company company = companyInMemoryRepository.findById(id);
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new CompanyNotFoundException("No such company"));
         return company.getEmployees();
     }
 
