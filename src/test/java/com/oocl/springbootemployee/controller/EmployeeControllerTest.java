@@ -84,13 +84,14 @@ class EmployeeControllerTest {
     @Test
     void should_return_employee_when_get_by_id() throws Exception {
         // Given
-        final Employee givenEmployee = employeeInMemoryRepository.findAll().get(0);
+        final Employee givenEmployee = employeeRepository.findAll().get(0);
+        Integer givenEmployeeId = givenEmployee.getId();
 
         // When
         // Then
-        client.perform(MockMvcRequestBuilders.get("/employees/1"))
+        client.perform(MockMvcRequestBuilders.get("/employees/" + givenEmployeeId))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(givenEmployee.getId()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(givenEmployeeId))
             .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(givenEmployee.getName()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(givenEmployee.getAge()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value(givenEmployee.getGender().name()))
