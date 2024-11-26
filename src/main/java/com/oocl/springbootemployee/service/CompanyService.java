@@ -34,7 +34,8 @@ public class CompanyService {
     }
 
     public Company findById(Integer id) {
-        return companyInMemoryRepository.findById(id);
+        return companyRepository.findById(id)
+                .orElseThrow(() -> new CompanyNotFoundException("No such company"));
     }
 
 
