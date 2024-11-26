@@ -1,5 +1,6 @@
 package com.oocl.springbootemployee.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,13 +21,24 @@ public class Employee {
     private Double salary;
     private Boolean isActive = true;
 
-    public Employee(Integer id, String name, Integer age, Gender gender, Double salary) {
+    @Column(name = "company_id")
+    private Integer companyId;
 
+    public Employee(Integer id, String name, Integer age, Gender gender, Double salary) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.gender = gender;
         this.salary = salary;
+    }
+
+    public Employee(Integer id, String name, Integer age, Gender gender, Double salary, Integer companyId) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.salary = salary;
+        this.companyId = companyId;
     }
 
     public Employee() {
@@ -74,5 +86,13 @@ public class Employee {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 }
