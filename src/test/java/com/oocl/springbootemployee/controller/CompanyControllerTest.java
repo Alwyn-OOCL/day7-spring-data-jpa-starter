@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.oocl.springbootemployee.model.Company;
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.model.Gender;
-import com.oocl.springbootemployee.repository.CompanyInMemoryRepository;
 import com.oocl.springbootemployee.repository.CompanyRepository;
 import com.oocl.springbootemployee.repository.EmployeeRepository;
 import java.util.List;
@@ -34,9 +33,6 @@ class CompanyControllerTest {
 
     @Autowired
     private MockMvc client;
-
-    @Autowired
-    private CompanyInMemoryRepository companyInMemoryRepository;
 
     @Autowired
     private CompanyRepository companyRepository;

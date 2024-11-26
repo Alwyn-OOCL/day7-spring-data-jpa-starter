@@ -3,7 +3,6 @@ package com.oocl.springbootemployee.service;
 import com.oocl.springbootemployee.exception.CompanyNotFoundException;
 import com.oocl.springbootemployee.model.Company;
 import com.oocl.springbootemployee.model.Employee;
-import com.oocl.springbootemployee.repository.CompanyInMemoryRepository;
 import com.oocl.springbootemployee.repository.CompanyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,12 +13,10 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    private final CompanyInMemoryRepository companyInMemoryRepository;
 
     private final CompanyRepository companyRepository;
 
-    public CompanyService(CompanyInMemoryRepository companyInMemoryRepository, CompanyRepository companyRepository) {
-        this.companyInMemoryRepository = companyInMemoryRepository;
+    public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 
