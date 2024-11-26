@@ -3,6 +3,7 @@ package com.oocl.springbootemployee.service;
 import com.oocl.springbootemployee.exception.EmployeeAgeNotValidException;
 import com.oocl.springbootemployee.exception.EmployeeAgeSalaryNotMatchedException;
 import com.oocl.springbootemployee.exception.EmployeeInactiveException;
+import com.oocl.springbootemployee.exception.EmployeeNotFoundException;
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.model.Gender;
 import com.oocl.springbootemployee.repository.EmployeeInMemoryRepository;
@@ -32,7 +33,7 @@ public class EmployeeService {
     }
 
     public Employee findById(Integer employeeId) {
-        return employeeInMemoryRepository.findById(employeeId);
+        return employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("No such employee"));
     }
 
     public Employee create(Employee employee) {
