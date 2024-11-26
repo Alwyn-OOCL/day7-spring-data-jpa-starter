@@ -9,14 +9,15 @@ import com.oocl.springbootemployee.model.Gender;
 import com.oocl.springbootemployee.repository.EmployeeInMemoryRepository;
 import com.oocl.springbootemployee.repository.EmployeeRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 @Service
 public class EmployeeService {
-    private final EmployeeInMemoryRepository employeeInMemoryRepository;
 
     private final EmployeeRepository employeeRepository;
-    public EmployeeService(EmployeeInMemoryRepository employeeInMemoryRepository, EmployeeRepository employeeRepository) {
-        this.employeeInMemoryRepository = employeeInMemoryRepository;
+    public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -28,8 +29,10 @@ public class EmployeeService {
         return employeeRepository.findByGender(gender);
     }
 
-    public List<Employee> findAll(Integer page, Integer pageSize) {
-        return employeeInMemoryRepository.findAllByPage(page, pageSize);
+    public Page<Employee> findAll(Integer page, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<Employee> employeesPage = employeeRepository.findAll(pageRequest);
+        return new PageImpl<>(employeesPage.getContent(), pageRequest, employeesPage.getTotalElements());
     }
 
     public Employee findById(Integer employeeId) {
