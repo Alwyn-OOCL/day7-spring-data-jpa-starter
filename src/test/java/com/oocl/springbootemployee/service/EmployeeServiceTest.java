@@ -3,8 +3,7 @@ package com.oocl.springbootemployee.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,9 +13,9 @@ import com.oocl.springbootemployee.exception.EmployeeAgeSalaryNotMatchedExceptio
 import com.oocl.springbootemployee.exception.EmployeeInactiveException;
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.model.Gender;
-import com.oocl.springbootemployee.repository.EmployeeInMemoryRepository;
 import com.oocl.springbootemployee.repository.EmployeeRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,20 +24,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
-    
+
     @Mock
-    EmployeeInMemoryRepository employeeInMemoryRepository;
-    
-    @Mock
-    EmployeeRepository employeeRepository;
+    private EmployeeRepository mockJpaRepository;
+
+    @InjectMocks
+    private EmployeeService employeeService;
 
     @Test
     void should_return_the_given_employees_when_getAllEmployees() {
         //given
-        when(employeeInMemoryRepository.findAll()).thenReturn(List.of(new Employee(1, "Lucy", 18, Gender.FEMALE, 8000.0)));
+        when(mockJpaRepository.findAll()).thenReturn(List.of(new Employee(1, "Lucy", 18, Gender.FEMALE, 8000.0)));
 
         //when
-        List<Employee> allEmployees = employeeInMemoryRepository.findAll();
+        List<Employee> allEmployees = employeeService.findAll();
 
         //then
         assertEquals(1, allEmployees.size());
@@ -49,8 +48,7 @@ class EmployeeServiceTest {
     void should_return_the_created_employee_when_create_given_a_employee() {
         //given
         Employee lucy = new Employee(1, "Lucy", 18, Gender.FEMALE, 8000.0);
-        when(employeeInMemoryRepository.create(any())).thenReturn(lucy);
-        EmployeeService employeeService = buildEmployeeService();
+        when(mockJpaRepository.save(any())).thenReturn(lucy);
 
         //when
         Employee createdEmployee = employeeService.create(lucy);
@@ -63,44 +61,40 @@ class EmployeeServiceTest {
     void should_throw_EmployeeAgeNotValidException_when_create_given_a_employee_with_age_17() {
         //given
         Employee kitty = new Employee(1, "Kitty", 6, Gender.FEMALE, 8000.0);
-        EmployeeService employeeService = buildEmployeeService();
         //when
         //then
         assertThrows(EmployeeAgeNotValidException.class, () -> employeeService.create(kitty));
-        verify(employeeInMemoryRepository, never()).create(any());
+        verify(mockJpaRepository, never()).save(any());
     }
 
     @Test
     void should_throw_EmployeeAgeNotValidException_when_create_given_a_employee_with_age_66() {
         //given
         Employee kitty = new Employee(1, "Kitty", 66, Gender.FEMALE, 8000.0);
-        EmployeeService employeeService = buildEmployeeService();
         //when
         //then
         assertThrows(EmployeeAgeNotValidException.class, () -> employeeService.create(kitty));
-        verify(employeeInMemoryRepository, never()).create(any());
+        verify(mockJpaRepository, never()).save(any());
     }
 
     @Test
     void should_created_employee_active_when_create_employee() {
         //given
-        EmployeeService employeeService = buildEmployeeService();
         Employee lucy = new Employee(1, "Lucy", 18, Gender.FEMALE, 8000.0);
         //when
         employeeService.create(lucy);
         /* then */
-        verify(employeeInMemoryRepository).create(argThat(Employee::getActive));
+        verify(mockJpaRepository).save(argThat(Employee::getActive));
     }
 
     @Test
     void should_throw_EmployeeAgeSalaryNotMatchedException_when_save_given_a_employee_with_age_over_30_and_salary_below_20K() {
         //given
         Employee bob = new Employee(1, "Bob", 31, Gender.FEMALE, 8000.0);
-        EmployeeService employeeService = buildEmployeeService();
         //when
         //then
         assertThrows(EmployeeAgeSalaryNotMatchedException.class, () -> employeeService.create(bob));
-        verify(employeeInMemoryRepository, never()).create(any());
+        verify(mockJpaRepository, never()).save(any());
     }
 
     @Test
@@ -108,15 +102,10 @@ class EmployeeServiceTest {
         //given
         Employee inactiveEmployee = new Employee(1, "Bob", 31, Gender.FEMALE, 8000.0);
         inactiveEmployee.setActive(false);
-        when(employeeInMemoryRepository.findById(1)).thenReturn(inactiveEmployee);
-        EmployeeService employeeService = buildEmployeeService();
+        when(mockJpaRepository.findById(1)).thenReturn(Optional.of(inactiveEmployee));
         //when
         //then
-        assertThrows(EmployeeInactiveException.class, () -> employeeService.update(1, inactiveEmployee));
-        verify(employeeInMemoryRepository, never()).create(any());
-    }
-
-    private EmployeeService buildEmployeeService() {
-        return new EmployeeService(employeeInMemoryRepository, employeeRepository);
+        assertThrows(EmployeeInactiveException.class, () -> employeeService.update(inactiveEmployee));
+        verify(mockJpaRepository, never()).save(any());
     }
 }
