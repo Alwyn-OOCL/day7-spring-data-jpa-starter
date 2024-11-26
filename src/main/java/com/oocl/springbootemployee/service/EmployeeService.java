@@ -45,7 +45,7 @@ public class EmployeeService {
         }
 
         employee.setActive(true);
-        return employeeInMemoryRepository.create(employee);
+        return employeeRepository.save(employee);
     }
 
     public Employee update(Integer employeeId , Employee employee) {
