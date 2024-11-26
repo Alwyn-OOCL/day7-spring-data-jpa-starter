@@ -48,13 +48,13 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee update(Integer employeeId , Employee employee) {
-        Employee employeeExisted = employeeInMemoryRepository.findById(employeeId);
-        if(!employeeExisted.getActive()) {
+    public Employee update(Employee employee) {
+        Employee employeeExisted = employeeRepository.findById(employee.getId()).orElseThrow(() -> new EmployeeNotFoundException("No such employee"));
+        if(Boolean.FALSE.equals(employeeExisted.getActive())) {
             throw new EmployeeInactiveException();
         }
 
-        return employeeInMemoryRepository.update(employeeId, employee);
+        return employeeRepository.save(employee);
     }
 
     public void delete(Integer employeeId) {
