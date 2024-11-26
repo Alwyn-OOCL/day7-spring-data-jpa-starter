@@ -115,21 +115,21 @@ class CompanyControllerTest {
                 .isEqualTo(givenCompanies);
     }
 
-//    @Test
-//    void should_return_paged_companies_when_get_by_page_params() throws Exception {
-//        // Given
-//        var pageIndex = 2;
-//        var pageSize = 2;
-//        final var the5thEmployeeCompanyInPage3 = companyInMemoryRepository.findById(nexus_industries.getId());
-//
-//        // When
-//        // Then
-//        client.perform(MockMvcRequestBuilders.get(String.format("/companies?pageIndex=%s&pageSize=%s", pageIndex, pageSize)))
-//            .andExpect(MockMvcResultMatchers.status().isOk())
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)))
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(the5thEmployeeCompanyInPage3.get().getId()))
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(the5thEmployeeCompanyInPage3.get().getName()));
-//    }
+    @Test
+    void should_return_paged_companies_when_get_by_page_params() throws Exception {
+        // Given
+        var pageIndex = 2;
+        var pageSize = 2;
+        final var the5thEmployeeCompanyInPage3 = companyRepository.findById(nexus_industries.getId());
+
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.get(String.format("/companies?pageIndex=%s&pageSize=%s", pageIndex, pageSize)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(the5thEmployeeCompanyInPage3.get().getId()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(the5thEmployeeCompanyInPage3.get().getName()));
+    }
 //
 //    @Test
 //    void should_return_employees_when_get_employees_under_the_company() throws Exception {
