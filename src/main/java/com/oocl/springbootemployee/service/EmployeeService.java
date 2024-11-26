@@ -37,10 +37,12 @@ public class EmployeeService {
     }
 
     public Employee create(Employee employee) {
-        if(employee.getAge() < 18 || employee.getAge() > 65)
+        if(employee.getAge() < 18 || employee.getAge() > 65) {
             throw new EmployeeAgeNotValidException();
-        if(employee.getAge() >= 30 && employee.getSalary() < 20000.0)
+        }
+        if(employee.getAge() >= 30 && employee.getSalary() < 20000.0) {
             throw new EmployeeAgeSalaryNotMatchedException();
+        }
 
         employee.setActive(true);
         return employeeInMemoryRepository.create(employee);
@@ -48,8 +50,9 @@ public class EmployeeService {
 
     public Employee update(Integer employeeId , Employee employee) {
         Employee employeeExisted = employeeInMemoryRepository.findById(employeeId);
-        if(!employeeExisted.getActive())
+        if(!employeeExisted.getActive()) {
             throw new EmployeeInactiveException();
+        }
 
         return employeeInMemoryRepository.update(employeeId, employee);
     }
